@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  python_app:
+    image: python_app
+    deploy: 
+      replicas: 1
+    build:
+      context: ./Python
+      dockerfile: Dockerfile
+    volumes:
+      - ./stress_threads.py:/app/stress_threads.py
+    command: /bin/sh -c 'python3 -u /app/stress_threads.py'
+
+
+  postgres:
+    #image: postgres
+    build: ./postgres
+    container_name: postgres
+    restart: always
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+      POSTGRES_DB: mydb
+    command: postgres
+    volumes:
+      - postgres:/data/postgres
+
+  pgweb:
+    container_name: pgweb
+    restart: always
+    image: sosedoff/pgweb
+    ports: 
+      - 8081:8081
+    links: 
+      - postgres:postgres
+    environment:
+      - DATABASE_URL=postgres://postgres:example@postgres:5432/mydb?sslmode=disable
+    depends_on:
+      - postgres
+
+volumes:
+  postgres:
