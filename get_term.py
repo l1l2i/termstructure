@@ -57,9 +57,11 @@ def process_eth_futures(engine):
             "index_price": index_price,
             "percentage_difference": percentage_difference,
             "annualized_percentage_diff": annualized_percentage_diff
-        })  
+        })
+        print(f"Future: {future['instrument_name']}", "Annualized", f"{annualized_percentage_diff:.2f}%")
     df = pd.DataFrame(records)
     save_to_db(df, engine)
+    
 
 # Setup database connection parameters
 db_params = "postgresql://postgres:example@postgres:5432/mydb"
