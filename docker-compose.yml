@@ -10,8 +10,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./get_term.py:/app/get_term.py
-#    command: /bin/sh -c 'python3 -u /app/get_term.py'
-    command: bash -c "while true; do echo hello; sleep 2; done"
+    command: /bin/sh -c 'python3 -u /app/get_term.py'
+#    command: bash -c "while true; do echo hello; sleep 2; done"
 
 
   postgres:
