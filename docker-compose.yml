@@ -6,16 +6,17 @@ services:
     deploy: 
       replicas: 1
     build:
-      context: ./Python
+      context: ./
       dockerfile: Dockerfile
     volumes:
-      - ./stress_threads.py:/app/stress_threads.py
-    command: /bin/sh -c 'python3 -u /app/stress_threads.py'
+      - ./get_term.py:/app/get_term.py
+#    command: /bin/sh -c 'python3 -u /app/get_term.py'
+    command: bash -c "while true; do echo hello; sleep 2; done"
 
 
   postgres:
-    #image: postgres
-    build: ./postgres
+    image: postgres
+    #build: ./postgres
     container_name: postgres
     restart: always
     expose:
