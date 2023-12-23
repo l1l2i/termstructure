@@ -42,6 +42,11 @@ def process_eth_futures(engine):
         expiration_timestamp = future['expiration_timestamp'] / 1000
         days_until_expiration = (expiration_timestamp - datetime.now().timestamp()) / (60 * 60 * 24)
         index_difference = midpoint - index_price
+        percentage_difference = ((midpoint - index_price) / index_price) * 100
+        if days_until_expiration > 0:
+            annualized_percentage_diff = percentage_difference * (365 / days_until_expiration)
+        else:
+            annualized_percentage_diff = 0  # To handle contracts that might have already expired or error in data
         current_timestamp = datetime.now()
         records.append({
             "timestamp": current_timestamp,
@@ -49,8 +54,10 @@ def process_eth_futures(engine):
             "midpoint": midpoint,
             "days_until_expiration": days_until_expiration,
             "index_difference": index_difference,
-            "index_price": index_price
-        })
+            "index_price": index_price,
+            "percentage_difference": percentage_difference,
+            "annualized_percentage_diff": annualized_percentage_diff
+        })  
     df = pd.DataFrame(records)
     save_to_db(df, engine)
 
