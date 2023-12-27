@@ -6,16 +6,17 @@ from sqlalchemy import create_engine
 
 # Function to get the order book for a given instrument
 def get_book(depth=10, instrument='ETH-PERPETUAL'):
-    response = requests.get(f"https://test.deribit.com/api/v2/public/get_order_book?depth={depth}&instrument_name={instrument}")
+    response = requests.get(f"https://deribit.com/api/v2/public/get_order_book?depth={depth}&instrument_name={instrument}")
     return response.json()
 
-# Function to get ETH futures data from Deribit
-def get_eth_futures():
-    url = "https://www.deribit.com/api/v2/public/get_instruments?currency=ETH&kind=future&expired=false"
-    response = requests.get(url)
+
+def get_futures(currency='ETH'):
+    # Corrected by adding 'f' to make it an f-string for variable interpolation
+    response = requests.get(f"https://www.deribit.com/api/v2/public/get_instruments?currency={currency}&kind=future&expired=false")
     if response.status_code != 200:
         raise Exception("Failed to retrieve data from Deribit")
     return response.json()
+
 
 # Function to get ETH index price
 def get_eth_index_price():
@@ -31,7 +32,7 @@ def save_to_db(df, engine):
 
 # Main function to process ETH futures and save data
 def process_eth_futures(engine):
-    futures_data = get_eth_futures()
+    futures_data = get_futures(currency='ETH')
     index_price = get_eth_index_price()
     records = []
     for future in futures_data['result']:
