@@ -34,7 +34,7 @@ def process_futures(engine):
     records = []
     for future in futures_data['result']:
         order_book = get_book(instrument=future['instrument_name'], depth=5)
-        order_book = get_book(instrument='ETH-5JAN24', depth=5)
+        #order_book = get_book(instrument='ETH-5JAN24', depth=5)
         spot_book = get_book(instrument='ETH_USDC', depth=5)
         best_ask_spot = spot_book['result']['best_ask_price'] 
         best_bid_spot = spot_book['result']['best_bid_price']
@@ -87,9 +87,9 @@ def process_futures(engine):
             "percentage_difference": percentage_difference,
             "annualized_percentage_diff": annualized_percentage_diff
         })
-        #print(f"Future: {future['instrument_name']}", "Annualized", f"{annualized_percentage_diff:.2f}%")
+        print(f"Future: {future['instrument_name']}", "Annualized", f"{annualized_percentage_diff:.2f}%")
     df = pd.DataFrame(records)
-    print(df)
+    #print(df)
     #save_to_db(df, engine)
     
 db_params = "postgresql://postgres:example@postgres:5432/mydb"
