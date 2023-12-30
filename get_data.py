@@ -90,7 +90,7 @@ def process_futures(engine):
         print(f"Future: {future['instrument_name']}", "Annualized", f"{annualized_percentage_diff:.2f}%")
     df = pd.DataFrame(records)
     #print(df)
-    #save_to_db(df, engine)
+    save_to_db(df, engine)
     
 db_params = "postgresql://postgres:example@postgres:5432/mydb"
 
