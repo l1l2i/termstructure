@@ -1,6 +1,5 @@
 import requests
 from datetime import datetime
-import time
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -35,28 +34,27 @@ def process_futures(engine):
     records = []
     for future in futures_data['result']:
         order_book = get_book(instrument=future['instrument_name'], depth=5)
-        spot_book = get_book(instrument='ETH_USDC')
+        spot_book = get_book(instrument='ETH_USDC', depth=5)
         best_bid_spot = spot_book['result']['best_bid_price']
         best_ask_spot = spot_book['result']['best_ask_price']       
         best_bid_fut = order_book['result']['best_bid_price']
         best_ask_fut = order_book['result']['best_ask_price']
-        ask_sizes = sum([ask['size'] for ask in order_book['result']['asks'][:5]])
-        bid_sizes = sum([bid['size'] for bid in order_book['result']['bids'][:5]])
-        market_delta = ask_sizes - bid_sizes
-
+        ask_sizes_fut = sum([ask['size'] for ask in order_book['result']['asks'][:5]])
+        bid_sizes_fut = sum([bid['size'] for bid in order_book['result']['bids'][:5]])
+        ask_sizes_spot = sum([ask['size'] for ask in spot_book['result']['asks'][:5]])
+        bid_sizes_spot = sum([bid['size'] for bid in spot_book['result']['bids'][:5]])
+        market_delta_fut = ask_sizes_fut - bid_sizes_fut
+        market_delta_spot = ask_sizes_spot - bid_sizes_spot
         open_interest = order_book['result']['open_interest']
         volume_fut = order_book['result']['volume']
         volume_spot = spot_book['result']['volume']
-
         midpoint = (best_bid_fut + best_ask_fut) / 2
         entry_carry = best_bid_fut - best_ask_spot
         exit_carry = -best_ask_fut + best_bid_spot
         expiration_timestamp = future['expiration_timestamp'] / 1000
         days_until_expiration = (expiration_timestamp - datetime.now().timestamp()) / (60 * 60 * 24)
-
         index_difference = midpoint - index_price
         percentage_difference = ((midpoint - index_price) / index_price) * 100
-        
         if days_until_expiration > 0:
             annualized_percentage_diff = percentage_difference * (365 / days_until_expiration)
         else:
@@ -65,16 +63,33 @@ def process_futures(engine):
         records.append({
             "timestamp": current_timestamp,
             "future": future['instrument_name'],
+            "best_bid_fut": best_bid_fut,
+            "best_ask_fut": best_ask_fut,
             "midpoint": midpoint,
+            "ask_sizes_fut": ask_sizes_fut,
+            "bid_sizes_fut": bid_sizes_fut,
+            "market_delta_fut": market_delta_fut,
+            "open_interest": open_interest,
+            "volume_fut": volume_fut,
+            "spot": 'ETH_USDC',
+            "best_bid_spot": best_bid_spot,
+            "best_ask_spot": best_ask_spot, 
+            "ask_sizes_spot": ask_sizes_spot,
+            "bid_sizes_spot": bid_sizes_spot,
+            "market_delta_spot": market_delta_spot,
+            "volume_spot": volume_spot,
+            "entry_carry": entry_carry,
+            "exit_carry": exit_carry,
             "days_until_expiration": days_until_expiration,
             "index_difference": index_difference,
             "index_price": index_price,
             "percentage_difference": percentage_difference,
             "annualized_percentage_diff": annualized_percentage_diff
         })
-        print(f"Future: {future['instrument_name']}", "Annualized", f"{annualized_percentage_diff:.2f}%")
+        #print(f"Future: {future['instrument_name']}", "Annualized", f"{annualized_percentage_diff:.2f}%")
     df = pd.DataFrame(records)
-    save_to_db(df, engine)
+    print(df)
+    #save_to_db(df, engine)
     
 db_params = "postgresql://postgres:example@postgres:5432/mydb"
 
