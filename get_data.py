@@ -34,20 +34,21 @@ def process_futures(engine):
     records = []
     for future in futures_data['result']:
         order_book = get_book(instrument=future['instrument_name'], depth=5)
+        order_book = get_book(instrument='ETH-5JAN24', depth=5)
         spot_book = get_book(instrument='ETH_USDC', depth=5)
+        best_ask_spot = spot_book['result']['best_ask_price'] 
         best_bid_spot = spot_book['result']['best_bid_price']
-        best_ask_spot = spot_book['result']['best_ask_price']       
-        best_bid_fut = order_book['result']['best_bid_price']
         best_ask_fut = order_book['result']['best_ask_price']
-        ask_sizes_fut = sum([ask['size'] for ask in order_book['result']['asks'][:5]])
-        bid_sizes_fut = sum([bid['size'] for bid in order_book['result']['bids'][:5]])
-        ask_sizes_spot = sum([ask['size'] for ask in spot_book['result']['asks'][:5]])
-        bid_sizes_spot = sum([bid['size'] for bid in spot_book['result']['bids'][:5]])
+        best_bid_fut = order_book['result']['best_bid_price']
+        ask_sizes_fut = sum([ask[1] for ask in order_book['result']['asks'][:5]])
+        bid_sizes_fut = sum([bid[1] for bid in order_book['result']['bids'][:5]])
+        ask_sizes_spot = sum([ask[1] for ask in order_book['result']['asks'][:5]])
+        bid_sizes_spot = sum([bid[1] for bid in spot_book['result']['bids'][:5]])
         market_delta_fut = ask_sizes_fut - bid_sizes_fut
         market_delta_spot = ask_sizes_spot - bid_sizes_spot
         open_interest = order_book['result']['open_interest']
-        volume_fut = order_book['result']['volume']
-        volume_spot = spot_book['result']['volume']
+        volume_fut = order_book['result']['stats']['volume']
+        volume_spot = spot_book['result']['stats']['volume']
         midpoint = (best_bid_fut + best_ask_fut) / 2
         entry_carry = best_bid_fut - best_ask_spot
         exit_carry = -best_ask_fut + best_bid_spot
