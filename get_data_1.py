@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 CURRENCY = 'ETH'
 DEPTH = 10
 SPOT = 'ETH_USDC'
-
+TABLE = 'futures_data'
 
 
 # Function to get the order book for a given instrument
@@ -96,7 +96,7 @@ def process_futures(engine):
         print(f"Future: {future['instrument_name']}", "Annualized", f"{annualized_percentage_diff:.2f}%", "Entry_carry", f"{entry_carry:.2f}", "Exit_carry", f"{exit_carry:.2f}")
     df = pd.DataFrame(records)
     #print(df)
-    save_to_db(df, engine)
+    save_to_db(df, engine, table=TABLE)
     
 db_params = "postgresql://postgres:example@postgres:5432/mydb"
 
