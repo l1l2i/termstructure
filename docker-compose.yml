@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  python_app:
+  ETH:
     image: python_app
     deploy: 
       replicas: 1
@@ -11,6 +11,18 @@ services:
     volumes:
       - ./get_data_1.py:/app/get_data_1.py
     command: /bin/sh -c 'while true; do sleep 1; python3 -u /app/get_data_1.py; done'
+#    command: bash -c "while true; do echo hello; sleep 2; done"
+
+  BTC:
+    image: python_app
+    deploy: 
+      replicas: 1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./get_data_2.py:/app/get_data_2.py
+    command: /bin/sh -c 'while true; do sleep 1; python3 -u /app/get_data_2.py; done'
 #    command: bash -c "while true; do echo hello; sleep 2; done"
 
   postgres:
