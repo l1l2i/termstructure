@@ -9,8 +9,8 @@ services:
       context: ./
       dockerfile: Dockerfile
     volumes:
-      - ./get_data.py:/app/get_data.py
-    command: /bin/sh -c 'while true; do sleep 1; python3 -u /app/get_data.py; done'
+      - ./get_data_1.py:/app/get_data_1.py
+    command: /bin/sh -c 'while true; do sleep 1; python3 -u /app/get_data_1.py; done'
 #    command: bash -c "while true; do echo hello; sleep 2; done"
 
   postgres:
