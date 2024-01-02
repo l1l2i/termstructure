@@ -29,8 +29,8 @@ def get_book(depth=10, instrument='ETH-PERPETUAL'):
 
 #order_book = get_book(instrument='ETH-5JAN24', depth=5)
 
-fut1 = get_book(instrument='ETH-5JAN24', depth=5)
-fut2 = get_book(instrument='ETH-5JAN24', depth=5)
+fut1 = get_book(instrument='BTC-26JAN24', depth=5)
+fut2 = get_book(instrument='BTC-23FEB24', depth=5)
 
 spot = get_book(instrument=SPOT, depth=DEPTH)
 
@@ -44,11 +44,34 @@ best_ask_fut_2 = fut2['result']['best_ask_price']
 best_bid_fut_2 = fut2['result']['best_bid_price']
 
 
-PnL = 
 
-market_profit = 
-liquidate_profit
-volume_to_roll
+PnL_fut_1 = (Fut1_usd/best_ask_fut_1-Fut1_usd/Fut1_entry)*best_ask_spot
+PnL_spot_1 = (best_bid_spot - Spot1_entry)*Spot1_volume
+
+Port_usd_1 = (Spot1_volume - (Fut1_usd/best_ask_fut_1-Fut1_usd/Fut1_entry))*best_bid_spot
+PnL_1 = PnL_spot_1 + PnL_fut_1
+
+
+PnL_fut_2 = (Fut2_usd/best_ask_fut_2-Fut2_usd/Fut2_entry)*best_ask_spot
+PnL_spot_2 = (best_bid_spot - Spot2_entry)*Spot2_volume
+
+Port_usd_2 = (Spot2_volume - (Fut2_usd/best_ask_fut_2-Fut2_usd/Fut2_entry))*best_bid_spot
+PnL_2 = PnL_spot_2 + PnL_fut_2
+
+Total_port_value_usd = Port_usd_1 + Port_usd_2
+Total_PnL = PnL_1 + PnL_2
+
+print(f"Future: {future['instrument_name']}")
+print(f"Midpoint: {midpoint}")
+print(f"Days Until Expiration: {days_until_expiration}")
+print(f"Index Difference: {index_difference}")
+print("-" * 30)
+
+
+
+#market_profit = 
+#liquidate_profit
+#volume_to_roll
 
 
 
