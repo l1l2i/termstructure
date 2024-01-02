@@ -87,7 +87,9 @@ print("-" * 30)
 print(f"Total_BTC: {Total_BTC}")
 print(f"CryptoBalance_1: {CryptoBalance_1}")
 print(f"CryptoBalance_2: {CryptoBalance_2}")
-
+print("-" * 30)
+print("-" * 30)
+print("-" * 30)
 #market_profit = 
 #liquidate_profit
 #volume_to_roll
