@@ -34,14 +34,14 @@ fig.add_trace(go.Scatter(x=df['timestamp'], y=df['entry_carry'], mode='lines', n
 fig.add_trace(go.Scatter(x=df['timestamp'], y=df['exit_carry'], mode='lines', name='exit_carry'), row=1, col=1)
 
 # Adding market_delta_fut to the subplot
-fig.add_trace(go.Scatter(x=df['timestamp'], y=df['market_delta_fut'], mode='lines', name='Market Delta Future'), row=2, col=1)
+fig.add_trace(go.Scatter(x=df['timestamp'], y=df['market_delta_fut'], mode='lines', name='market_delta_fut'), row=2, col=1)
 
 # Updating layout for a better widescreen fit
 fig.update_layout(height=1080, width=1920, title_text="BTC-5JAN24 Analysis")
 
 # Displaying the plot
-#fig.show()
-fig.write_html("BTC-5JAN24_analysis.html")
+fig.show()
+#fig.write_html("BTC-5JAN24_analysis.html")
 
 
 
